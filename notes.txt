@@ -1,0 +1,31 @@
++----------------+---------------+-----------------+---------------------+---------------+
+| Table          |   Command     |   CHAIN         |  matches            |   Target/Jump |
++----------------+---------------+-----------------+---------------------+---------------+
+| filter(default)|   -A (append) |   INPUT         |  -s source_ip       |   ACCEPT      |
+| nat            |   -I (insert) |   OUTPUT        |  -d desti_ipo       |   DROP        |
+| mange          |   -D (delete) |   PREROUTING    |  -p protocol        |   REJECT      |
+| raw            |   -R (replace)|   POSTROUTING   |  --sport source_port|   LOG         |
+|                |  -F (flush)   |   USER_DEFINED  |  --dport dest_port  |   SNAT        |
+|                |   -Z (zero)   |                 | -i incoming_int     |  DNAT         |
+|                |   -L (list)   |                 | -o outgoing_int     |  MASQUERADE   |
+|                |   -S (show)   |                 | -m mac              |  LIMIT        |
+|                |   -N          |                 | -m time             |  RETURN       |
+|                |   -X          |                 | -m quota            |  TEE          |
+|                |               |                 | -m limit            |  TOS          |  
+|                |               |                 | -m recent           |  TTL          |
++----------------+---------------+-----------------+---------------------+---------------+
+
+What CHAIN and table are used for SNAT or MASQUERADE?
+- POSTROUTING CHAIN and nat table
+
+You are the Admin of a Linux-based Router and want to block routed traffic from your LAN to a specific domain or IP address. What CHAIN and table will you use for filtering routed traffic?
+- FORWARD CHAIN and filter table
+
+The admin wants to forward Internet traffic that is coming to the Linux-based Router to a local server with a private IP address. He adds some iptables rules to POSTROUTING CHAIN and nat table but the traffic is not correctly forwarded. What did he do wrong?
+- He should have used the PREROUTING CHAIN
+
+What CHAIN and table are used for filtering incoming packets?
+- Only INPUT CAHIN and filter table
+
+You want to check how many packets matched against an iptables rule and run the following command: iptables -L  The result is not satisfactory because the no. of matched packets are not displayed. What did you do wrong?
+- You must include the -v option 'iptables -vl'
