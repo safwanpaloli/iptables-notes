@@ -29,3 +29,60 @@ What CHAIN and table are used for filtering incoming packets?
 
 You want to check how many packets matched against an iptables rule and run the following command: iptables -L  The result is not satisfactory because the no. of matched packets are not displayed. What did you do wrong?
 - You must include the -v option 'iptables -vl'
+
+You want to filter routed traffic so you intend to set the POLICY to DROP to the nat table and POSTROUTING Chain and after that to allow only some kind of traffic. What's wrong with this approach? 
+- There is noPOLICY for nat table.  Only filter table has POLICY
+
+What is the default POLICY for Iptables?
+- ACCEPT
+
+The admin wants to delete the iptables firewall, connects to the Linux machine using ssh  and runs: iptables -F  After running the command the ssh connection freezes.  What was the problem and how can it be solved?
+- The POLICY was set to DROP.  Using -F options means flushing all the rules from filter table and all CHAINS but the POLICY remains as it is.  The Linux Machine must be manually restarted or configured from the local console connection.
+
+You want your Iptables firewall to be automatically loaded at boot time. For that you write all rules inside a script and add that script to /etc/rc.local  How is this approach?
+- This approach is good.  The firewall will be automatically loaded at boot time.
+
+The admin writes a rule at the terminal that drops traffic coming from a specific IP. The rule works as expected, but after a system restart the rule is gone. What happened?
+- Iptables rules written at the terminal are not automatically saved after reboot.
+
+What is happening after running the following 2 iptables commands. There are no more iptables rules on INPUT Chain/filter table.
+iptables -A INPUT -s 192.168.0.10 -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+- Packets to TCP port 22 will be accepted only if they are coming from 192.168.0.10
+
+What is happening after running the following 2 iptables commands. There are no more iptables rules on INPUT Chain/filter table.
+iptables -I INPUT -s 192.168.0.10 -p tcp --dport 22 -j ACCEPT
+iptables -I INPUT -p tcp --dport 22 -j DROP
+- All packets to TCP port 22 will be dropped.  When using the -I (insert) option the rule will be the first in the chain.
+
+What iptables rule will drop all incoming packets from 192.168.0.10?
+- iptables -I INPUT -s 192.168.0.10 -j DROP
+
+You want to LOG all incoming packets to TCP port 25 if they initialize a new connection. What iptables match accomplishes that?
+- --syn
+
+What is the difference between the DROP and the REJECT target?
+- Both drop packets but the REJECT target also sends a packet back to the source.
+
+What happens after a packet is matched against a rule with the LOG target?
+- The packet will continue traversing the chain until a rule drops or accepts it.
+
+Which target is more efficient when dropping tcp packets? Why?
+- REJECT becasue sending a packet back to the source will make the source abandoning sending a new packet (retransmissions)
+
+Both SNAT and MASQUERADE can be used for the public IP address of a router.  SNAT is recommended.
+
+What CHAIN is used for Port Forwarding
+- PREROUTING
+
+What CHAIN is used for NAT (SNAT or MASQUERADE)?
+- POSTROUTING
+
+You want to configure a Linux Router for NAT and run the following command. This is the only command you run.
+What's missing?
+iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
+- You must start the routing process (echo "1" > /proc/sys/net/ipv4/ip_forward)
+
+What's wrong with the following iptables rule?
+iptables -t mangle -A PREROUTING -p tcp --dport 22 -j DNAT --to-destination 10.0.0.1
+- The wrong table is used.  The nat table should be used.
