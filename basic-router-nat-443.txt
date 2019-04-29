@@ -1,0 +1,39 @@
+Internet——VM1——VM2
+
+I configured VM2 as a standard host using VM1 as the gateway.  
+
+On VM1 I configured routing, source nat, and firewall policy to only allow only HTTPS to the internet for VM2 while VM1 will have full access to the internet.
+
+VM1
+curl example.com
+curl -k example.com 
+both of these commands return the same result.
+
+echo "1" > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE
+
+VM2
+ping 8.8.8.8
+64 bytes from 8.8.8.8 icmp_seq_=1 ttl=127 time=15.3 ms
+
+curl example.com
+curl -k example.com 
+both of these commands return the same result.
+
+VM1 - Set default FORWARD policy to drop
+iptables -P FORWARD drop
+
+VM2
+ping and curl fail on http and https
+
+VM1
+iptables -A FORWARD -s 10.0.0.2/32 -p tcp —sport 443 -j ACCEPT
+iptables -A FORWARD -m state —state ESTABLISHED,RELATED -j ACCEPT
+
+VM2
+ping and curl on port 80 fail
+curl on port 44 is successful
+
+
+
+***DNS works using host files***
