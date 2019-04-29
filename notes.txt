@@ -5,6 +5,7 @@
 | nat            |   -I (insert) |   OUTPUT        |  -d desti_ipo       |   DROP        |
 | mange          |   -D (delete) |   PREROUTING    |  -p protocol        |   REJECT      |
 | raw            |   -R (replace)|   POSTROUTING   |  --sport source_port|   LOG         |
+|                |               |   FORWARD       |                     |               |
 |                |  -F (flush)   |   USER_DEFINED  |  --dport dest_port  |   SNAT        |
 |                |   -Z (zero)   |                 | -i incoming_int     |  DNAT         |
 |                |   -L (list)   |                 | -o outgoing_int     |  MASQUERADE   |
